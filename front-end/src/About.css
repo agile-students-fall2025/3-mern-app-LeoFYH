@@ -1,0 +1,21 @@
+.about-container {
+    color: white;
+    text-align: center;
+    padding: 40px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .about-description {
+    white-space: pre-line;
+    line-height: 1.6;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+  }
+  
+  .about-photo {
+    width: 300px;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+  }
+  

@@ -5,7 +5,7 @@ const cors = require('cors') // middleware for enabling CORS (Cross-Origin Resou
 const mongoose = require('mongoose')
 
 const app = express() // instantiate an Express object
-app.use(morgan('dev', { skip: (req, res) => process.env.NODE_ENV === 'test' })) // log all incoming requests, except when in unit test mode.  morgan has a few logging default styles - dev is a nice concise color-coded style
+app.use(morgan('dev', { skip: (req, res) => process.env.NODE_ENV === 'test' })) // log all incoming requests, except when in unit test mode
 app.use(cors()) // allow cross-origin resource sharing
 
 // use express's builtin body-parser middleware to parse any data included in a request
@@ -18,13 +18,16 @@ mongoose
   .then(data => console.log(`Connected to MongoDB`))
   .catch(err => console.error(`Failed to connect to MongoDB: ${err}`))
 
-// load the dataabase models we want to deal with
+// load the database models we want to deal with
 const { Message } = require('./models/Message')
 const { User } = require('./models/User')
 
-// a route to handle fetching all messages
+// ---------------------
+// existing routes
+// ---------------------
+
+// get all messages
 app.get('/messages', async (req, res) => {
-  // load all messages from database
   try {
     const messages = await Message.find({})
     res.json({
@@ -40,9 +43,8 @@ app.get('/messages', async (req, res) => {
   }
 })
 
-// a route to handle fetching a single message by its id
+// get one message by id
 app.get('/messages/:messageId', async (req, res) => {
-  // load all messages from database
   try {
     const messages = await Message.find({ _id: req.params.messageId })
     res.json({
@@ -57,9 +59,9 @@ app.get('/messages/:messageId', async (req, res) => {
     })
   }
 })
-// a route to handle logging out users
+
+// save a message
 app.post('/messages/save', async (req, res) => {
-  // try to save the message to the database
   try {
     const message = await Message.create({
       name: req.body.name,
@@ -78,5 +80,24 @@ app.post('/messages/save', async (req, res) => {
   }
 })
 
-// export the express app we created to make it available to other modules
-module.exports = app // CommonJS export style!
+// ---------------------
+// new route: /api/about
+// ---------------------
+
+app.get('/api/about', (req, res) => {
+  res.json({
+    name: "Yuhang Fu",
+    description: `
+      I am a computer science and game design student at NYU.
+      I love creating interactive experiences that blend creativity and logic.
+      My projects focus on game mechanics, emotional design, and player experience.
+      Outside of coding, I enjoy drawing, playing indie games, and exploring digital art.
+    `,
+    photo: "https://i.imgur.com/GWf4KgL.jpeg" //
+  })
+})
+
+// ---------------------
+
+// export the express app we created
+module.exports = app
